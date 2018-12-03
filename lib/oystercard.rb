@@ -9,9 +9,16 @@ class Oystercard
   end
 
  def top_up(amount)
-   fail "#{MAX_BALANCE} limit breached" if amount + @balance > MAX_BALANCE
+   max_balance_breach(amount)
+  # fail "#{MAX_BALANCE} limit breached" if amount + @balance > MAX_BALANCE
    @balance += amount
  end
+
+private
+
+def max_balance_breach(amount)
+  fail "#{MAX_BALANCE} limit breached" if amount + @balance > MAX_BALANCE
+end
 
 
 end
