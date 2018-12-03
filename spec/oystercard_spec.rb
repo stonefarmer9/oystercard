@@ -18,4 +18,9 @@ describe Oystercard do
     expect{ card.top_up 1 }.to raise_error "#{maximum_balance} limit breached"
   end
 
+  it 'deducts an amount from the balance when used' do
+    card.balance = 30
+    expect(card.deduct(10)).to eq 20
+  end
+
 end
