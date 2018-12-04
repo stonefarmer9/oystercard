@@ -22,5 +22,18 @@ describe Oystercard do
     card.balance = 30
     expect(card.deduct(10)).to eq 20
   end
+  it 'starts not checked in' do
+    expect(card.in_journey).to be true
+  end
+  it 'Lets you touch-in and changes the status of the card' do
+    expect(card.touch_in).to be true
+  end
+
+  it 'Lets you touch-out and changes the status of the card' do
+
+    expect(card.touch_out).to be false
+ end
+
+#####Step 8 mostly complete, needs final details finished
 
 end
