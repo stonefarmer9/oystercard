@@ -5,6 +5,7 @@ describe Oystercard do
   let (:card) { Oystercard.new }
   let (:entry_station) { double :station }
   let (:exit_station) { double :station }
+
 context '#initialise' do
   it 'starts with no journeys stored' do
     expect(card.journey_history).to be_empty
