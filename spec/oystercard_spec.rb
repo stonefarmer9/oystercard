@@ -3,14 +3,15 @@ require 'oystercard'
 describe Oystercard do
 
   let (:card) { Oystercard.new }
-  let (:station) { double :station }
+  let (:entry_station) { double :station }
+  let (:exit_station) { double :station }
+context '#initialise' do
+  it 'starts with no journeys stored' do
+    expect(card.journey_history).to be_empty
+  end
 
-
-
-context '#balance' do
-
-  it 'has a starting balance of 0' do
-    expect(card.balance).to eq(0)
+  it 'starts with 0 balance' do
+    expect(card.balance).to eq 0
   end
 end
 
@@ -30,13 +31,7 @@ end
 context '#touch_in' do
 
   it 'raises an error' do
-    expect { card.touch_in(station) }.to raise_error "1"
-  end
-
-  it 'Saves the entry station' do
-    card.top_up(20)
-    card.touch_in(station)
-    expect(card.entry_station).to eq station
+    expect { card.touch_in(entry_station) }.to raise_error "1"
   end
 
 end
@@ -45,15 +40,21 @@ context "#touch_out" do
 
 
   it 'Deducts the MINIMUM_FARE from the balance on touch out' do
-    expect { card.touch_out }.to change{ card.balance }.by(-Oystercard::MINIMUM_FARE)
-  end
-
-  it 'Touches out and deletes the entry station' do
     card.top_up(20)
-    card.touch_in(station)
-    card.touch_out
-    expect(card.entry_station).to eq nil
+    card.touch_in(entry_station)
+    expect { card.touch_out(exit_station) }.to change{ card.balance }.by(-Oystercard::MINIMUM_FARE)
   end
 
  end
-end
+
+ context "Saving the journey" do
+   let(:journey){ {entry: entry_station, exit: exit_station} }
+
+   it 'Saves the entry and exit stations' do
+     card.top_up(20)
+     card.touch_in(entry_station)
+     card.touch_out(exit_station)
+     expect(card.journey_history).to include journey
+   end
+   end
+ end
