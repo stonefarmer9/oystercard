@@ -18,9 +18,9 @@ class Oystercard
    @balance += amount
  end
 
- def touch_in(entry_station)
+ def touch_in(journey = Journey.new(entry_station))
    fail "1" if @balance < MINIMUM_FARE
-   @journey = { :entry => entry_station }
+   @journey = nil
  end
 
  def touch_out(exit_station)
