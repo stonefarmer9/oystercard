@@ -5,6 +5,8 @@ describe Oystercard do
   let (:card) { Oystercard.new }
   let (:entry_station) { double :station }
   let (:exit_station) { double :station }
+  let(:journey_class_double) { double(:journey_class, new: journey_double) }
+  let(:journey_double) { double(:journey) }
 
 context '#initialise' do
   it 'starts with no journeys stored' do
@@ -41,21 +43,26 @@ context "#touch_out" do
 
 
   it 'Deducts the MINIMUM_FARE from the balance on touch out' do
+    allow(journey_double).to receive(:finish).and_return(journey_double)
+    allow(journey_double).to receive(:fare).and_return(1)
     card.top_up(20)
-    card.touch_in(entry_station)
+    card.touch_in(journey_double)
     expect { card.touch_out(exit_station) }.to change{ card.balance }.by(-Oystercard::MINIMUM_FARE)
   end
 
  end
 
  context "Saving the journey" do
-   let(:journey){ {entry: entry_station, exit: exit_station} }
+
+
 
    it 'Saves the entry and exit stations' do
+     allow(journey_double).to receive(:finish).and_return(journey_double)
+     allow(journey_double).to receive(:fare).and_return(1)
      card.top_up(20)
-     card.touch_in(entry_station)
+     card.touch_in(journey_double)
      card.touch_out(exit_station)
-     expect(card.journey_history).to include journey
+     expect(card.journey_history).to include [journey_double]
    end
    end
  end

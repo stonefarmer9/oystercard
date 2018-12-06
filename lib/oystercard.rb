@@ -1,4 +1,4 @@
-require 'journey'
+require_relative 'journey'
 
 class Oystercard
 
@@ -18,15 +18,15 @@ class Oystercard
    @balance += amount
  end
 
- def touch_in(journey = Journey.new(entry_station))
+ def touch_in(journey = Journey.new(entry_station: station))
    fail "1" if @balance < MINIMUM_FARE
-   @journey = nil
+   @journey = journey
  end
 
  def touch_out(exit_station)
-   deduct(MINIMUM_FARE)
-   @journey[:exit] = exit_station
-   @journey_history << @journey
+   @journey.finish(exit_station)
+   @journey_history << [@journey]
+   deduct(@journey.fare)
  end
 
 private
@@ -39,7 +39,4 @@ def deduct(amount)
   @balance -= amount
 end
 
-def in_journey?
-  !!@entry_station
-end
 end
